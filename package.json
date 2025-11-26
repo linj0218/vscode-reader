@@ -2,7 +2,7 @@
     "name": "vscode-reader",
     "displayName": "VSCode 摸鱼阅读器",
     "description": "在 VSCode 中隐蔽地通过代码提示（幽灵文本）阅读本地小说。支持章节识别、翻页及进度保存。",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "icon": "images/icon.jpg",
     "publisher": "zhoupb",
     "repository": {
@@ -53,19 +53,24 @@
                 "mac": "cmd+alt+."
             },
             {
-                "command": "vscode-reader.nextChapter",
-                "key": "ctrl+alt+]",
-                "mac": "cmd+alt+]"
-            },
-            {
-                "command": "vscode-reader.prevChapter",
-                "key": "ctrl+alt+[",
-                "mac": "cmd+alt+["
-            },
-            {
                 "command": "vscode-reader.jumpChapter",
                 "key": "ctrl+alt+j",
                 "mac": "cmd+alt+j"
+            },
+            {
+                "command": "vscode-reader.toggle",
+                "key": "space",
+                "when": "editorTextFocus && vscode-reader.isReading"
+            },
+            {
+                "command": "vscode-reader.nextChapter",
+                "key": "]",
+                "when": "editorTextFocus && vscode-reader.isReading"
+            },
+            {
+                "command": "vscode-reader.prevChapter",
+                "key": "[",
+                "when": "editorTextFocus && vscode-reader.isReading"
             }
         ],
         "configuration": {

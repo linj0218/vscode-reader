@@ -287,10 +287,10 @@ class Reader implements vscode.InlineCompletionItemProvider, vscode.Disposable {
 
     public toggle() {
         this._isEnabled = !this._isEnabled;
+        vscode.commands.executeCommand('setContext', 'vscode-reader.isReading', this._isEnabled);
         if (this._isEnabled) {
-            this.updateStatusBar();
             this._statusBarItem.show();
-            vscode.commands.executeCommand('editor.action.inlineSuggest.trigger');
+            this.refreshContent();
         } else {
             this._statusBarItem.hide();
             vscode.commands.executeCommand('editor.action.inlineSuggest.hide');
