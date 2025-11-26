@@ -1,0 +1,108 @@
+{
+    "name": "vscode-reader",
+    "displayName": "VSCode 摸鱼阅读器",
+    "description": "在 VSCode 中隐蔽地通过代码提示（幽灵文本）阅读本地小说。支持章节识别、翻页及进度保存。",
+    "version": "0.0.1",
+    "publisher": "zhoupb",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zhoupb01/vscode-reader"
+    },
+    "engines": {
+        "vscode": "^1.106.1"
+    },
+    "keywords": [
+        "reader",
+        "novel",
+        "book",
+        "txt",
+        "read",
+        "moyu",
+        "摸鱼",
+        "小说"
+    ],
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "vscode-reader.toggle",
+                "title": "阅读器: 开关显示 (Toggle Display)"
+            },
+            {
+                "command": "vscode-reader.nextChapter",
+                "title": "阅读器: 下一章 (Next Chapter)"
+            },
+            {
+                "command": "vscode-reader.prevChapter",
+                "title": "阅读器: 上一章 (Previous Chapter)"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "vscode-reader.toggle",
+                "key": "ctrl+alt+.",
+                "mac": "cmd+alt+."
+            },
+            {
+                "command": "vscode-reader.nextChapter",
+                "key": "ctrl+alt+]",
+                "mac": "cmd+alt+]"
+            },
+            {
+                "command": "vscode-reader.prevChapter",
+                "key": "ctrl+alt+[",
+                "mac": "cmd+alt+["
+            }
+        ],
+        "configuration": {
+            "title": "VSCode 摸鱼阅读器",
+            "properties": {
+                "vscode-reader.linesPerPage": {
+                    "type": "number",
+                    "default": 15,
+                    "description": "每页显示的行数 (Lines per page)"
+                },
+                "vscode-reader.charsPerLine": {
+                    "type": "number",
+                    "default": 50,
+                    "description": "每行显示的字符数 (Characters per line)"
+                },
+                "vscode-reader.filePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "小说文件的绝对路径 (Absolute path to the .txt file)"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run package",
+        "compile": "npm run check-types && npm run lint && node esbuild.js",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "package": "npm run check-types && npm run lint && node esbuild.js --production",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "npm run compile-tests && npm run compile && npm run lint",
+        "check-types": "tsc --noEmit",
+        "lint": "eslint src",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.106.1",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "22.x",
+        "typescript-eslint": "^8.46.3",
+        "eslint": "^9.39.1",
+        "esbuild": "^0.27.0",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.9.3",
+        "@vscode/test-cli": "^0.0.12",
+        "@vscode/test-electron": "^2.5.2"
+    }
+}
