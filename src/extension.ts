@@ -92,7 +92,9 @@ class FileBook implements Book {
             const firstLineEnd = rawSection.indexOf('\n');
             let title = rawSection.substring(0, firstLineEnd > 0 ? firstLineEnd : rawSection.length).trim();
             // 标题原始截断（后续在UI层再进行显示截断）
-            if (title.length > 50) title = title.substring(0, 50) + "...";
+            if (title.length > 50) {
+                title = title.substring(0, 50) + "...";
+            }
 
             this._chapterTitles.push(title);
             this._chapters.push(rawSection);
@@ -129,7 +131,9 @@ class FileBook implements Book {
                 continue;
             }
             
-            if (char === '\r') continue;
+            if (char === '\r') {
+                continue;
+            }
 
             currentLine += char;
             
@@ -138,9 +142,13 @@ class FileBook implements Book {
                 currentLine = "";
             }
         }
-        if (currentLine) lines.push(currentLine);
+        if (currentLine) {
+            lines.push(currentLine);
+        }
 
-        if (lines.length === 0) return ["(本章空)"];
+        if (lines.length === 0) {
+            return ["(本章空)"];
+        }
 
         const pages: string[] = [];
         for (let i = 0; i < lines.length; i += this._linesPerPage) {
@@ -188,7 +196,9 @@ export function activate(context: vscode.ExtensionContext) {
         
         // 配置监听
         vscode.workspace.onDidChangeConfiguration(e => {
-            if (!e.affectsConfiguration('vscode-reader')) return;
+            if (!e.affectsConfiguration('vscode-reader')) {
+                return;
+            }
 
             book.reloadConfig();
             
