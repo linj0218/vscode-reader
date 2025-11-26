@@ -7,6 +7,7 @@ import * as fs from 'fs';
 interface Book {
     init(): Promise<void>;
     getTitle(chapterIndex: number): string;
+    getAllTitles(): string[];
     getPageContent(chapterIndex: number, pageIndex: number): string;
     getChapterPageCount(chapterIndex: number): number;
     getTotalChapters(): number;
@@ -162,6 +163,10 @@ class FileBook implements Book {
         return this._chapterTitles[index] || "";
     }
 
+    public getAllTitles(): string[] {
+        return this._chapterTitles;
+    }
+
     public getPageContent(chapterIndex: number, pageIndex: number): string {
         const pages = this._formattedChapters[chapterIndex];
         return pages ? (pages[pageIndex] || "") : "";
@@ -193,6 +198,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('vscode-reader.toggle', () => reader.toggle()),
         vscode.commands.registerCommand('vscode-reader.nextChapter', () => reader.next()),
         vscode.commands.registerCommand('vscode-reader.prevChapter', () => reader.prev()),
+        vscode.commands.registerCommand('vscode-reader.jumpChapter', () => reader.jump()),
         
         // 配置监听
         vscode.workspace.onDidChangeConfiguration(e => {
@@ -323,6 +329,39 @@ class Reader implements vscode.InlineCompletionItemProvider, vscode.Disposable {
                 this.refreshContent();
             } else {
                 this.showTempMessage('$(warning) 已经是全书第一页');
+            }
+        }
+    }
+
+    public async jump() {
+        const titles = this._book.getAllTitles();
+        if (titles.length === 0) {
+            vscode.window.showWarningMessage('章节列表为空');
+            return;
+        }
+
+        const items = titles.map((title, index) => ({
+            label: `${index + 1}. ${title}`,
+            index: index
+        }));
+
+        const picked = await vscode.window.showQuickPick(items, {
+            placeHolder: '搜索或选择要跳转的章节',
+            matchOnDescription: true,
+            matchOnDetail: true
+        });
+
+        if (picked) {
+            this._currentChapterIndex = picked.index;
+            this._currentPageIndex = 0;
+            this.saveProgress();
+            this.refreshContent();
+            
+            // 如果当前没有启用，提示用户开启
+            if (!this._isEnabled) {
+                this.showTempMessage('已跳转，请点击状态栏图标或运行 toggle 命令开启阅读');
+            } else {
+                this.showTempMessage(`已跳转到: ${picked.label}`);
             }
         }
     }
